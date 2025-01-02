@@ -4,7 +4,7 @@
 
 ## 描述
 AliyunDDNS  
-顾名思义, 是一个用于更新阿里云域名解析的小工具  
+顾名思义, 是一个用于动态更新阿里云域名解析的小工具  
 它通过你自定义的获取公网IP的API, 查询到你的本机IP  
 然后通过阿里云的DNS服务, 将你的域名解析到你的本机IP  
 中间如果产生任何错误, 则会记录错误日志, 并且通过邮件发送错误日志  
@@ -92,3 +92,65 @@ AliyunDDNS
 ## 联系作者
 * 邮箱: zightch@163.com
 * QQ: 2166825850
+
+## 其他细节
+* 程序启动, 查询无需更新, 已经更新完成, 查询失败, 更新失败  
+  如上操作都会发邮件到你的邮箱
+* 每过整点十分钟会进行一次域名IP检查  
+  需要修改的话可以自行修改文件[DDNS_GetIP.cpp](DDNS/DDNS_GetIP.cpp)  
+  文件第35行
+  ```c++
+  QDateTime baseDateTime = QDateTime::currentDateTime(); // 创建基准时间点
+  int msec; // 距离基准时间点的毫秒数
+  {
+      auto currDateTime = QDateTime::currentDateTime();
+      // 提取当前时间和日期
+      QTime currentTime = baseDateTime.time();
+      int currentMinutes = currentTime.minute();
+
+      // 计算距离下一个10分钟的分钟差
+      int minutesToNext10 = (10 - currentMinutes % 10) % 10;
+      if (minutesToNext10 == 0) {
+          minutesToNext10 = 10; // 如果正好在10分钟的边界上，则跳到下一个10分钟
+      }
+
+      // 构建下一个10分钟的时间点，使用addSecs()自动生成正确的时间点
+      baseDateTime = baseDateTime.addSecs(minutesToNext10 * 60 - currentTime.second() - currentTime.msec() / 1000);
+      msec = int(baseDateTime.toMSecsSinceEpoch() - currDateTime.toMSecsSinceEpoch());
+   }
+  ```
+  修改后重新编译运行
+* 如果每次都失败, 那么每过`10分钟`你的邮箱就会有一条邮件, 这显然不合适  
+  所以alarms类邮件如果每次都出错, 则`一个小时`只会发一次, 如果需要修改  
+  可以在全局项目里搜`alarmsLastSendDateTime`相关字眼
+* notify0(即无需更新通知)邮件只会在程序启动时和每月的1日早上8点整发  
+  其他时间段全部静默  
+  如需修改的话, 自行修改文件[DDNS_updateDNS.cpp](DDNS/DDNS_updateDNS.cpp)  
+  文件第225行
+  ```c++
+  auto currDate = QDateTime::currentDateTime();
+  auto currHour = currDate.toString("hh").toInt();
+  auto currMin = currDate.toString("mm").toInt();
+  auto currDay = currDate.toString("dd").toInt();
+
+  if (isStart || (currHour == 8 && currDay == 1 && currMin < 10)) {
+      currMailGroup = "notify0";
+      ...
+  ```
+* notify1(即更新成功通知)邮件会在每次更新成功时发送, 这个一般情况应该是正确的需求  
+  如果你非要修改的话  
+  自行修改文件[DDNS_updateDNS.cpp](DDNS/DDNS_updateDNS.cpp)  
+  文件第298行
+  ```c++
+  currMailGroup = "notify1";
+  ...
+  ```
+
+> 之所以让你们自行修改有关定时任务的代码, 是因为定时任务种类太多  
+> 包括但不限于
+> * 10分钟整点还是10分钟之后
+> * 每天定时几点还是会有若干的定时点
+> * 每个星期几还是每月的第几天, 还是每星期或每月都会有若干定时点
+> * 邮件的发送定时以及逻辑等(同上)
+> 
+> 一个小工具内置完整的定时任务逻辑引擎显然不合适, 所以只能由你们自己来决定  
