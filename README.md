@@ -37,7 +37,7 @@ AliyunDDNS
    mkdir build
    cd build
    cmake ..
-   make # (或替换为你的其他构建攻击指令)
+   make # 或替换为你的其他构建工具指令
    ```
 
 ### 使用
