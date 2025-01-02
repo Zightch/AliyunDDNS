@@ -65,8 +65,8 @@ void DDNS::getIPFinish_() {
             QString table;
             auto tmp2 = fail.keys();
             for (const auto &j: tmp2) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + fail[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + fail[j] + "</div>\n");
             }
             tmp.replace("${table}", table);
             currMsg = tmp.toUtf8();
@@ -85,34 +85,48 @@ void DDNS::getIPFinish_() {
 }
 
 void DDNS::getIPAnalyse_(const QString &url, const QByteArray &data) {
-    QJsonParseError error;
-    auto doc = QJsonDocument::fromJson(data, &error);
-    if (error.error != QJsonParseError::NoError) {
-        auto str = error.errorString();
-        qWarning() << ("IP API " + url + " 返回的数据不是json: " + str).toUtf8().data();
-        fail[url] = str;
-        return;
+    auto content = data.trimmed();
+    if (isIPv4(content))
+    {
+        ret4[url] = content;
+        qInfo() << (url + " 返回的ip地址: " + content).toUtf8().data();
     }
-    if (!doc.isObject()) {
-        qWarning() << ("IP API " + url + " 返回的数据不是json对象").toUtf8().data();
-        fail[url] = "返回的数据不是json对象";
-        return;
+    else if (isIPv6(content))
+    {
+        ret6[url] = content;
+        qInfo() << (url + " 返回的ip地址: " + content).toUtf8().data();
     }
-    auto obj = doc.object();
-    if (!obj.contains("ip")) {
-        qWarning() << ("IP API " + url + " 返回的json数据不包含ip字段").toUtf8().data();
-        fail[url] = "返回的json数据不包含ip字段";
-        return;
+    else
+    {
+        QJsonParseError error;
+        auto doc = QJsonDocument::fromJson(content, &error);
+        if (error.error != QJsonParseError::NoError) {
+            auto str = error.errorString();
+            qWarning() << ("IP API " + url + " 返回的数据不是json: " + str).toUtf8().data();
+            fail[url] = str;
+            return;
+        }
+        if (!doc.isObject()) {
+            qWarning() << ("IP API " + url + " 返回的数据不是json对象").toUtf8().data();
+            fail[url] = "返回的数据不是json对象";
+            return;
+        }
+        auto obj = doc.object();
+        if (!obj.contains("ip")) {
+            qWarning() << ("IP API " + url + " 返回的json数据不包含ip字段").toUtf8().data();
+            fail[url] = "返回的json数据不包含ip字段";
+            return;
+        }
+        auto ip = obj["ip"].toString();
+        if (!isIPv4(ip) && !isIPv6(ip)) {
+            qWarning() << ("IP API " + url + " 返回的ip内容不是有效的IPv4或IPv6").toUtf8().data();
+            fail[url] = "返回的ip内容不是有效的IPv4或IPv6";
+            return;
+        }
+        if (isIPv4(ip))
+            ret4[url] = ip;
+        if (isIPv6(ip))
+            ret6[url] = ip;
+        qInfo() << (url + " 返回的ip地址: " + ip).toUtf8().data();
     }
-    auto ip = obj["ip"].toString();
-    if (!isIPv4(ip) && !isIPv6(ip)) {
-        qWarning() << ("IP API " + url + " 返回的ip内容不是有效的IPv4或IPv6").toUtf8().data();
-        fail[url] = "返回的ip内容不是有效的IPv4或IPv6";
-        return;
-    }
-    if (isIPv4(ip))
-        ret4[url] = ip;
-    if (isIPv6(ip))
-        ret6[url] = ip;
-    qInfo() << (url + " 返回的ip地址: " + ip).toUtf8().data();
 }

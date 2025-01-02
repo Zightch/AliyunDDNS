@@ -53,18 +53,18 @@ void DDNS::updateDNS_()
             QString table;
             auto tmp1 = ret4.keys();
             for (const auto &j: tmp1) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + ret4[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + ret4[j] + "</div>\n");
             }
             auto tmp2 = ret6.keys();
             for (const auto &j: tmp2) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + ret6[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + ret6[j] + "</div>\n");
             }
             auto tmp3 = fail.keys();
             for (const auto &j: tmp3) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + fail[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + fail[j] + "</div>\n");
             }
             tmp.replace("${table}", table);
             currMsg = tmp.toUtf8();
@@ -87,18 +87,18 @@ void DDNS::updateDNS_()
             QString table;
             auto tmp1 = ret4.keys();
             for (const auto &j: tmp1) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + ret4[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + ret4[j] + "</div>\n");
             }
             auto tmp2 = ret6.keys();
             for (const auto &j: tmp2) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + ret6[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + ret6[j] + "</div>\n");
             }
             auto tmp3 = fail.keys();
             for (const auto &j: tmp3) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + fail[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + fail[j] + "</div>\n");
             }
             tmp.replace("${table}", table);
             currMsg = tmp.toUtf8();
@@ -236,18 +236,18 @@ void DDNS::findFinish_() {
             QString table;
             auto tmp1 = ret4.keys();
             for (const auto &i: tmp1) {
-                table += ("<p>" + i + "</p>\n");
-                table += ("<p>" + ret4[i] + "</p>\n");
+                table += ("<div>" + i + "</div>\n");
+                table += ("<div>" + ret4[i] + "</div>\n");
             }
             auto tmp2 = ret6.keys();
             for (const auto &j: tmp2) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + ret6[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + ret6[j] + "</div>\n");
             }
             auto tmp3 = fail.keys();
             for (const auto &j: tmp3) {
-                table += ("<p>" + j + "</p>\n");
-                table += ("<p>" + fail[j] + "</p>\n");
+                table += ("<div>" + j + "</div>\n");
+                table += ("<div>" + fail[j] + "</div>\n");
             }
             tmp.replace("${table}", table);
             tmp.replace("${domainName}", rr + "." + domainName);
@@ -303,18 +303,18 @@ void DDNS::updateFinish_() {
     QString table;
     auto tmp1 = ret4.keys();
     for (const auto &i: tmp1) {
-        table += ("<p>" + i + "</p>\n");
-        table += ("<p>" + ret4[i] + "</p>\n");
+        table += ("<div>" + i + "</div>\n");
+        table += ("<div>" + ret4[i] + "</div>\n");
     }
     auto tmp2 = ret6.keys();
     for (const auto &j: tmp2) {
-        table += ("<p>" + j + "</p>\n");
-        table += ("<p>" + ret6[j] + "</p>\n");
+        table += ("<div>" + j + "</div>\n");
+        table += ("<div>" + ret6[j] + "</div>\n");
     }
     auto tmp3 = fail.keys();
     for (const auto &j: tmp3) {
-        table += ("<p>" + j + "</p>\n");
-        table += ("<p>" + fail[j] + "</p>\n");
+        table += ("<div>" + j + "</div>\n");
+        table += ("<div>" + fail[j] + "</div>\n");
     }
     tmp.replace("${table}", table);
     tmp.replace("${domainName}", rr + "." + domainName);
