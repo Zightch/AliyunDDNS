@@ -1,0 +1,69 @@
+Content-Type: text/html; charset=UTF8;
+
+<html lang="zh-cn">
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+</head>
+<style>
+    .container {
+        width: 500px;
+        margin: 0 auto;
+        border-radius: 15px;
+        background-color: #221111;
+        padding: 20px;
+        color: #dddddd;
+        gap: 0;
+    }
+    .left-right {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .center-right {
+        display: grid;
+        place-items: center right;
+    }
+    .center {
+        text-align: center;
+    }
+    .footer {
+        font-size: 12px;
+        color: #999999;
+    }
+    .textbox {
+        resize: vertical;
+        margin-left: 30px;
+        width: 440px;
+        height: 200px;
+        font-size: 16px;
+        text-align: left;
+        white-space: pre;
+        color: #dddddd;
+        background-color: #222222;
+        border-radius: 10px;
+        border-color: transparent;
+        padding: 8px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="left-right">
+            <h1 style="color: #FFD900;">警告</h1>
+            <div class="center-right">${date}</div>
+        </div>
+        <div class="center">
+            <strong>DNS解析记录更新失败, 请尽快手动维修</strong>
+        </div>
+        <br/>
+        <label>
+            <textarea class="textbox" readonly>
+${log}
+            </textarea>
+        </label>
+        <div class="left-right footer">
+            <p>${name}</p>
+            <p class="center-right">此为系统邮件，请勿回复</p>
+        </div>
+    </div>
+</body>
+</html>

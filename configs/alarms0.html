@@ -1,0 +1,83 @@
+Content-Type: text/html; charset=UTF8;
+
+<html lang="zh-cn">
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+</head>
+<style>
+    .container {
+        width: 500px;
+        margin: 0 auto;
+        border-radius: 15px;
+        background-color: #221111;
+        padding: 20px;
+        color: #dddddd;
+        gap: 0;
+    }
+    .left-right {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .center-right {
+        display: grid;
+        place-items: center right;
+    }
+    .center {
+        text-align: center;
+    }
+    .table-common {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        place-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-right: 30px;
+        margin-left: 30px;
+    }
+    .table {
+        background-color: #444444;
+        border-radius: 0 0 15px 15px;
+        word-break: break-word;
+    }
+    .table-head {
+        background-color: #555555;
+        border-radius: 15px 15px 0 0;
+    }
+    .footer {
+        font-size: 12px;
+        color: #999999;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="left-right">
+            <h1 style="color: #FFD900;">警告</h1>
+            <div class="center-right">${date}</div>
+        </div>
+        <div class="center">
+            <strong>各个IP API返回的公网IP地址不相同</strong>
+            <br>
+            请
+            <span style="color: #FF0000;">重启路由器</span>
+            或
+            <span style="color: #FF0000;">联系运营商</span>
+            <br>
+            <strong>本次将不进行DNS解析更新</strong>
+        </div>
+        <br/>
+        <div class="table-head table-common">
+            <div>URL</div>
+            <div>返回值</div>
+        </div>
+        <div class="table table-common">
+            ${table}
+        </div>
+        <br/>
+        <div class="left-right footer">
+            <p>${name}</p>
+            <p class="center-right">此为系统邮件，请勿回复</p>
+        </div>
+    </div>
+</body>
+</html>
