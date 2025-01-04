@@ -268,7 +268,7 @@ void DDNS::updateFinish_() {
     auto reply = (QNetworkReply *) sender();
     reply->deleteLater();
     auto alarms = [&](const QString &data) {
-        auto error = "DescribeDomainRecord请求失败" + data;
+        auto error = "UpdateDomainRecord请求失败" + data;
         qWarning() << error.toUtf8().data();
         updateLogs.append(updateLog_(error));
         sendAlarms1_();
