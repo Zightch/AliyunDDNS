@@ -1,9 +1,7 @@
 #pragma once
 
-#include <QObject>
 #include <QNetworkAccessManager>
 #include "SMTP/SMTP.h"
-#include "tools/tools.h"
 
 class DDNS : public QObject {
 Q_OBJECT
@@ -71,7 +69,6 @@ private:
     QString rr;//子域名
     QString type; // 记录类型
 
-    QString startHtml;
     QString notify0Html;
     QString notify1Html;
     QString alarms0Html;

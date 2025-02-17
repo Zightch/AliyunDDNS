@@ -23,8 +23,6 @@ add_executable(
 
         main.cpp
 
-        tools/tools.cpp
-
         SMTP/SMTP.cpp
         Logger/Logger.cpp
 

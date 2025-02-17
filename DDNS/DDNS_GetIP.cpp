@@ -3,6 +3,18 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+bool isIPv4(const QString &data) {
+    if (QHostAddress(data).protocol() == QAbstractSocket::IPv4Protocol)
+        return true;
+    return false;
+}
+
+bool isIPv6(const QString &data) {
+    if (QHostAddress(data).protocol() == QAbstractSocket::IPv6Protocol)
+        return true;
+    return false;
+}
+
 void DDNS::getIP_() {
     recTimer.stop();
     ret4.clear();

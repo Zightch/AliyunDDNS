@@ -2,8 +2,6 @@
 #include <QDebug>
 #include "Logger/Logger.h"
 
-const QByteArray mailStartTitle = "Aliyun DDNS Start!";
-
 DDNS *DDNS::once = nullptr;
 
 DDNS *DDNS::getObject(QObject *parent) {
