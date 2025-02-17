@@ -58,7 +58,7 @@ void DDNS::getIPFinish_() {
         {
             // 邮件 alarms2
             currMailGroup = "alarms2";
-            currTitle = "Aliyun DDNS Alarms";
+            currTitle = name + " Alarms";
             QString tmp = alarms2Html;
             tmp.replace("${date}", currentDateTime_());
             tmp.replace("${name}", name);

@@ -12,7 +12,6 @@ void DDNS::smtpFinish_() {
     if (theNTHRecipient >= receiverEmails.size()) {
         qInfo() << ("\"" + currMailGroup + "\"邮件发送完成").toUtf8().data();
         theNTHRecipient = 0;
-        if (isStart)QTimer::singleShot(0, this, &DDNS::getIP_);
         return;
     }
     sendMail_();

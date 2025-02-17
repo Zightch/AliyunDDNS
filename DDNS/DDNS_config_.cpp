@@ -136,7 +136,7 @@ void DDNS::config_() {
     } else
         qWarning() << "get-IP-servers文件打开失败, 请检查文件路径或权限";
 
-    name = conf.value("DDNS/name").toString();
+    name = conf.value("DDNS/name").toString().trimmed();
     if (name.isEmpty())qWarning() << "请填入你的DDNS名称";
 
     QFile ref(conf.value("SMTP/to").toString().toUtf8());

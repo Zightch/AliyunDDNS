@@ -30,17 +30,7 @@ void DDNS::start_() {
     connect(&smtp, &SMTP::finish, this, &DDNS::smtpFinish_);
 
     // 开始
-    if (!receiverEmails.isEmpty()) {
-        currMailGroup = mailStartTitle;
-        currTitle = mailStartTitle;
-        QString msg = startHtml;
-        msg.replace("${name}", name);
-        currMsg = msg.toUtf8();
-        sendMail_();
-    } else {
-        qWarning() << "没有收件人";
-        getIP_();
-    }
+    getIP_();
 }
 
 QString DDNS::currentDateTime_() {

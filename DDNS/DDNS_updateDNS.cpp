@@ -45,7 +45,7 @@ void DDNS::updateDNS_()
         if (alarmsLastSendDateTime.secsTo(QDateTime::currentDateTime()) >= 3600)
         {
             currMailGroup = "alarms3";
-            currTitle = "Aliyun DDNS Alarms";
+            currTitle = name + " Alarms";
             QString tmp = alarms3Html;
             tmp.replace("${date}", currentDateTime_());
             tmp.replace("${name}", name);
@@ -80,7 +80,7 @@ void DDNS::updateDNS_()
         if (alarmsLastSendDateTime.secsTo(QDateTime::currentDateTime()) >= 3600)
         {
             currMailGroup = "alarms0";
-            currTitle = "Aliyun DDNS Alarms";
+            currTitle = name + " Alarms";
             QString tmp = alarms0Html;
             tmp.replace("${date}", currentDateTime_());
             tmp.replace("${name}", name);
@@ -229,7 +229,7 @@ void DDNS::findFinish_() {
 
         if (isStart || (currHour == 8 && currDay == 1 && currMin < 10)) {
             currMailGroup = "notify0";
-            currTitle = "Aliyun DDNS Notify";
+            currTitle = name + " Notify";
             QString tmp = notify0Html;
             tmp.replace("${date}", currentDateTime_());
             tmp.replace("${name}", name);
@@ -296,7 +296,7 @@ void DDNS::updateFinish_() {
     qInfo() << (rr + "." + domainName + "更新成功: " + (type == "A" ? ret4.begin().value() : ret6.begin().value()) + ", 新的RecordId: " + newRecordId).toUtf8().data();
 
     currMailGroup = "notify1";
-    currTitle = "Aliyun DDNS Notify";
+    currTitle = name + " Notify";
     QString tmp = notify1Html;
     tmp.replace("${date}", currentDateTime_());
     tmp.replace("${name}", name);
@@ -331,7 +331,7 @@ void DDNS::sendAlarms1_() {
     if (alarmsLastSendDateTime.secsTo(QDateTime::currentDateTime()) >= 3600)
     {
         currMailGroup = "alarms1";
-        currTitle = "Aliyun DDNS Alarms";
+        currTitle = name + " Alarms";
         QString tmp = alarms1Html;
         tmp.replace("${date}", currentDateTime_());
         tmp.replace("${name}", name);
