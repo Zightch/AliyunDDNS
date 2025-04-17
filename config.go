@@ -62,6 +62,7 @@ func Configure() {
 	systemPool, err := x509.SystemCertPool()
 	if err != nil || systemPool == nil {
 		systemPool = nil
+		TlsConfig.ClientAuth = tls.NoClientCert // 不需要对端证书
 	}
 	TlsConfig.RootCAs = systemPool
 }
