@@ -1,4 +1,7 @@
 # AliyunDDNS
+
+> 已废弃, 不再使用
+
 阿里云DDNS  
 [国内镜像](https://sxjc1.staticplant.top:4006/Zightch/AliyunDDNS)
 
