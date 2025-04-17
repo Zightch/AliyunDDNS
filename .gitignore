@@ -1,6 +1,4 @@
-.vscode
-build
-cmake-build-*
-.idea
-configs/AliyunDDNS.ini
-configs/receiver-emails.json
+.idea/
+
+data/config.json
+**/*.exe
