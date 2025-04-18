@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func getIP() {
+func GetIP() {
 	type WebReply struct {
 		server string
 		body   []byte
@@ -81,7 +81,7 @@ func getIP() {
 	}
 }
 
-func describeDomainRecords() (string, string, error) {
+func DescribeDomainRecords() (string, string, error) {
 	query := url.Values{}
 	query.Add("Action", "DescribeDomainRecords")                            // 操作接口名
 	query.Add("DomainName", config.Aliyun.DomainName)                       // 域名
@@ -133,7 +133,7 @@ func describeDomainRecords() (string, string, error) {
 	return response.DomainRecords.Record[0].Value, response.DomainRecords.Record[0].RecordId, nil
 }
 
-func updateDomainRecord(recordId, newIP string) (string, error) {
+func UpdateDomainRecord(recordId, newIP string) (string, error) {
 	query := url.Values{}
 	query.Add("Action", "UpdateDomainRecord")                               // 操作接口名
 	query.Add("RecordId", recordId)                                         // 解析记录的ID

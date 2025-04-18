@@ -42,7 +42,7 @@ func updateDNS() {
 	ipv6Map = make(map[string]string)
 	failMap = make(map[string]string)
 
-	getIP()
+	GetIP()
 
 	if len(failMap) == len(config.IPAPIs) { // 所有api全部失败
 		log.Warning("all api failed")
@@ -89,13 +89,13 @@ func updateDNS() {
 		return
 	}
 
-	value, recodId, err := describeDomainRecords()
+	value, recodId, err := DescribeDomainRecords()
 	if err != nil {
 		log.Warning(err)
 		Alarms1(err)
 		return
 	}
-	log.Info("describeDomainRecords ok, value: ", value, " recodId: ", recodId)
+	log.Info("DescribeDomainRecords ok, value: ", value, " recodId: ", recodId)
 
 	var newIP string
 	if config.Aliyun.Type == "A" {
@@ -112,13 +112,13 @@ func updateDNS() {
 		Notify0()
 		return
 	}
-	newRecordId, err := updateDomainRecord(recodId, newIP)
+	newRecordId, err := UpdateDomainRecord(recodId, newIP)
 	if err != nil {
 		log.Warning(err)
 		Alarms1(err)
 		return
 	}
-	log.Info("updateDomainRecord ok, new recordId: ", newRecordId)
+	log.Info("UpdateDomainRecord ok, new recordId: ", newRecordId)
 	Notify1(value, newIP)
 	log.Info("update ok")
 }
