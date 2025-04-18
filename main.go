@@ -54,8 +54,8 @@ func updateDNS() {
 	GetIP()
 
 	if len(failMap) == len(config.IPAPIs) { // 所有api全部失败
-		log.Warning("all api failed")
 		Alarms2()
+		log.Warning("all api failed")
 		return
 	}
 
@@ -88,20 +88,20 @@ func updateDNS() {
 	}
 
 	if empty {
-		log.Warning("not found target type ip")
 		Alarms3()
+		log.Warning("not found target type ip")
 		return
 	}
 	if !equal {
-		log.Warning("ip not all equal")
 		Alarms0()
+		log.Warning("ip not all equal")
 		return
 	}
 
 	value, recordId, err := DescribeDomainRecords()
 	if err != nil {
-		log.Warning(err)
 		Alarms1(err)
+		log.Warning(err)
 		return
 	}
 	log.Info("DescribeDomainRecords ok, value: ", value, " RecordId: ", recordId)
@@ -117,14 +117,14 @@ func updateDNS() {
 	equal = newIP == value
 
 	if equal {
+		Notify0(value)
 		log.Info("not need update")
-		Notify0()
 		return
 	}
 	newRecordId, err := UpdateDomainRecord(recordId, newIP)
 	if err != nil {
-		log.Warning(err)
 		Alarms1(err)
+		log.Warning(err)
 		return
 	}
 	log.Info("UpdateDomainRecord ok, new RecordId: ", newRecordId)
