@@ -184,7 +184,7 @@ func Notify0(ip string) { // 无需更新
 			htmlS = strings.ReplaceAll(htmlS, "${table}", table())
 			htmlS = strings.ReplaceAll(htmlS, "${domainName}", config.Aliyun.RR+"."+config.Aliyun.DomainName)
 			htmlS = strings.ReplaceAll(htmlS, "${ip}", ip)
-			sendMail(config.SMTPAdminReceivers, config.Name+" Alarms", htmlS)
+			sendMail(config.SMTPAdminReceivers, config.Name+" Notify", htmlS)
 		}()
 	}
 	if user {
