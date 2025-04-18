@@ -90,7 +90,7 @@ func getIP(ipv4, ipv6, fail map[string]string) {
 			}
 			var body Body
 			if err := json.Unmarshal(webReply.body, &body); err != nil {
-				err := fmt.Sprint(webReply.server, " 返回数据内容不是json")
+				err := fmt.Sprint(webReply.server, " reply data not is json")
 				fail[webReply.server] = err
 				log.Warning(err)
 				continue
@@ -102,7 +102,7 @@ func getIP(ipv4, ipv6, fail map[string]string) {
 				ipv6[webReply.server] = body.Ip
 				log.Info(webReply.server, " reply IP is: ", body.Ip)
 			} else {
-				err := fmt.Sprint(webReply.server, " 返回数据内容没有ip信息")
+				err := fmt.Sprint(webReply.server, " in reply data not found ip")
 				fail[webReply.server] = err
 				log.Warning(err)
 			}
