@@ -80,10 +80,10 @@ func getIP(ipv4, ipv6, fail map[string]string) {
 		str := string(webReply.body)
 		if IsIPv4(str) {
 			ipv4[webReply.server] = str
-			log.Info(webReply.server, " 返回的IP地址: ", str)
+			log.Info(webReply.server, " reply IP is: ", str)
 		} else if IsIPv6(str) {
 			ipv6[webReply.server] = str
-			log.Info(webReply.server, " 返回的IP地址: ", str)
+			log.Info(webReply.server, " reply IP is: ", str)
 		} else {
 			type Body struct {
 				Ip string `json:"ip"`
@@ -97,10 +97,10 @@ func getIP(ipv4, ipv6, fail map[string]string) {
 			}
 			if IsIPv4(body.Ip) {
 				ipv4[webReply.server] = body.Ip
-				log.Info(webReply.server, " 返回的IP地址: ", body.Ip)
+				log.Info(webReply.server, " reply IP is: ", body.Ip)
 			} else if IsIPv6(body.Ip) {
 				ipv6[webReply.server] = body.Ip
-				log.Info(webReply.server, " 返回的IP地址: ", body.Ip)
+				log.Info(webReply.server, " reply IP is: ", body.Ip)
 			} else {
 				err := fmt.Sprint(webReply.server, " 返回数据内容没有ip信息")
 				fail[webReply.server] = err
