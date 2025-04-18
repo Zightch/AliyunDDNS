@@ -18,8 +18,6 @@ var expectRetCode = []int{0, 220, 250, 334, 334, 235, 250, 250, 354, 250, 221}
 var retMsgRe0 = regexp.MustCompile(`^[1-5]\d{2}\s.+$`)
 var retMsgRe1 = regexp.MustCompile(`^[1-5]\d{2}-.+$`)
 
-const TOTAL_STEPS = 10 // 总步数
-
 // SMTPError 表示SMTP错误结构体
 type SMTPError struct {
 	smtp     *SMTP
