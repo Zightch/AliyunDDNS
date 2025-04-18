@@ -11,14 +11,16 @@ import (
 
 func main() {
 	log.Info("start configure...")
-	Configure()
-	log.Info("configure ok")
 
+	Configure()
 	c := cron.New()
 	_, err := c.AddFunc(config.Cron, updateDNS)
 	if err != nil {
 		panic(err)
 	}
+
+	log.Info("configure ok")
+
 	updateDNS()
 	c.Start()
 	select {}
