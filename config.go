@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	lua "github.com/yuin/gopher-lua"
 	"net/http"
 	"os"
 	"time"
@@ -31,6 +32,8 @@ type Config struct {
 	Cron string `json:"cron"`
 }
 
+var first = true
+var lState *lua.LState
 var log = InitLog()
 var config = Config{
 	IPAPIs:             make([]string, 0),

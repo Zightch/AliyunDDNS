@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/robfig/cron/v3"
+	lua "github.com/yuin/gopher-lua"
 	"sync"
 )
 
@@ -27,7 +28,15 @@ func main() {
 
 	log.Info("configure ok")
 
+	lState = lua.NewState()
+	defer lState.Close()
+	err = lState.DoFile("data/mail_strategy.lua")
+	if err != nil {
+		panic(err)
+	}
+
 	updateDNS()
+	first = false
 	c.Start()
 	select {}
 }
@@ -89,13 +98,13 @@ func updateDNS() {
 		return
 	}
 
-	value, recodId, err := DescribeDomainRecords()
+	value, recordId, err := DescribeDomainRecords()
 	if err != nil {
 		log.Warning(err)
 		Alarms1(err)
 		return
 	}
-	log.Info("DescribeDomainRecords ok, value: ", value, " recodId: ", recodId)
+	log.Info("DescribeDomainRecords ok, value: ", value, " RecordId: ", recordId)
 
 	var newIP string
 	if config.Aliyun.Type == "A" {
@@ -112,13 +121,13 @@ func updateDNS() {
 		Notify0()
 		return
 	}
-	newRecordId, err := UpdateDomainRecord(recodId, newIP)
+	newRecordId, err := UpdateDomainRecord(recordId, newIP)
 	if err != nil {
 		log.Warning(err)
 		Alarms1(err)
 		return
 	}
-	log.Info("UpdateDomainRecord ok, new recordId: ", newRecordId)
+	log.Info("UpdateDomainRecord ok, new RecordId: ", newRecordId)
 	Notify1(value, newIP)
 	log.Info("update ok")
 }
