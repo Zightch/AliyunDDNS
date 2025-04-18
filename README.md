@@ -43,7 +43,7 @@ AliyunDDNS
    ```json
    {
      "name": "",
-     "get_ip_servers": [],
+     "ip_apis": [],
      "smtp": {
        "server": "",
        "ssl": false,

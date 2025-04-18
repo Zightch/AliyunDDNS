@@ -115,7 +115,7 @@ func (s *SMTP) SendMail(receiver, subject, body string) string {
 		var conn net.Conn // 定义连接对象
 		var err error     // 定义错误对象
 		if s.ssl {        // 如果启用SSL/TLS
-			conn, err = tls.DialWithDialer(dialer, "tcp", s.server, TlsConfig) // 使用TLS建立连接
+			conn, err = tls.DialWithDialer(dialer, "tcp", s.server, tlsConfig) // 使用TLS建立连接
 		} else { // 否则
 			conn, err = dialer.Dial("tcp", s.server) // 使用普通TCP建立连接
 		}

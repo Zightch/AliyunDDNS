@@ -8,9 +8,9 @@ import (
 )
 
 type Config struct {
-	Name         string   `json:"name"`
-	GetIPServers []string `json:"get_ip_servers"`
-	SMTP         struct {
+	Name   string   `json:"name"`
+	IPAPIs []string `json:"ip_apis"`
+	SMTP   struct {
 		Server string `json:"server"`
 		SSL    bool   `json:"ssl"`
 		User   string `json:"user"`
@@ -29,21 +29,24 @@ type Config struct {
 	Cron string `json:"cron"`
 }
 
-var LOG = InitLog()
-var CONFIG = Config{
-	GetIPServers:       make([]string, 0),
+var log = InitLog()
+var config = Config{
+	IPAPIs:             make([]string, 0),
 	SMTPAdminReceivers: make([]string, 0),
 	SMTPUserReceivers:  make([]string, 0),
 }
-var TlsConfig = &tls.Config{
+var tlsConfig = &tls.Config{
 	ClientAuth: tls.RequireAndVerifyClientCert,
 	MinVersion: tls.VersionTLS13,
 }
 
+const ALIYUN_API_URL = "https://alidns.aliyuncs.com"
+const ALIYUN_API_VERSION = "2015-01-09"
+
 func Configure() {
 	fileData, err := os.ReadFile("data/config.json")
 	if err != nil {
-		fileData, err := json.MarshalIndent(CONFIG, "", "  ")
+		fileData, err := json.MarshalIndent(config, "", "  ")
 		if err != nil {
 			panic(err)
 		}
@@ -51,10 +54,10 @@ func Configure() {
 		if err != nil {
 			panic(err)
 		}
-		LOG.Info("Please configure file \"data/config.json\" and then start AliyunDDNS")
+		log.Info("Please configure file \"data/config.json\" and then start AliyunDDNS")
 		os.Exit(0)
 	}
-	err = json.Unmarshal(fileData, &CONFIG)
+	err = json.Unmarshal(fileData, &config)
 	if err != nil {
 		panic(err)
 	}
@@ -62,7 +65,7 @@ func Configure() {
 	systemPool, err := x509.SystemCertPool()
 	if err != nil || systemPool == nil {
 		systemPool = nil
-		TlsConfig.ClientAuth = tls.NoClientCert // 不需要对端证书
+		tlsConfig.ClientAuth = tls.NoClientCert // 不需要对端证书
 	}
-	TlsConfig.RootCAs = systemPool
+	tlsConfig.RootCAs = systemPool
 }
