@@ -50,3 +50,11 @@ func IsIPv6(ipStr string) bool {
 	ip := net.ParseIP(ipStr)
 	return ip != nil && ip.To16() != nil && ip.To4() == nil
 }
+
+func GetMapKeys[K comparable, V any](m map[K]V) []K {
+	keys := make([]K, 0, len(m)) // 创建一个切片，长度为 map 的大小
+	for key := range m {
+		keys = append(keys, key) // 将每个键添加到切片中
+	}
+	return keys
+}

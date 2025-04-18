@@ -4,7 +4,9 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"net/http"
 	"os"
+	"time"
 )
 
 type Config struct {
@@ -22,7 +24,7 @@ type Config struct {
 	Aliyun             struct {
 		AccessKeyId     string `json:"access_key_id"`
 		AccessKeySecret string `json:"access_key_secret"`
-		Domain          string `json:"domain"`
+		DomainName      string `json:"domain_name"`
 		RR              string `json:"rr"`
 		Type            string `json:"type"`
 	} `json:"aliyun"`
@@ -38,6 +40,9 @@ var config = Config{
 var tlsConfig = &tls.Config{
 	ClientAuth: tls.RequireAndVerifyClientCert,
 	MinVersion: tls.VersionTLS13,
+}
+var httpClient = &http.Client{
+	Timeout: 5 * time.Second,
 }
 
 const ALIYUN_API_URL = "https://alidns.aliyuncs.com"

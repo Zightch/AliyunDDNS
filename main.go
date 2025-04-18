@@ -1,18 +1,24 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/robfig/cron/v3"
-	"io"
-	"net/http"
-	"time"
+	"sync"
+)
+
+var (
+	ipv4Map map[string]string
+	ipv6Map map[string]string
+	failMap map[string]string
+	mu      sync.Mutex
 )
 
 func main() {
 	log.Info("start configure...")
 
 	Configure()
+	if config.Aliyun.Type != "A" && config.Aliyun.Type != "AAAA" {
+		panic("aliyun.type must be A or AAAA")
+	}
 	c := cron.New()
 	_, err := c.AddFunc(config.Cron, updateDNS)
 	if err != nil {
@@ -27,89 +33,92 @@ func main() {
 }
 
 func updateDNS() {
-	log.Info("start updating")
-	ipv4 := make(map[string]string)
-	ipv6 := make(map[string]string)
-	fail := make(map[string]string)
-	getIP(ipv4, ipv6, fail)
+	mu.Lock() // 防止多个协程同时更新
+	defer mu.Unlock()
 
-}
+	log.Info("start update...")
 
-func getIP(ipv4, ipv6, fail map[string]string) {
-	type WebReply struct {
-		server string
-		body   []byte
-		err    string
+	ipv4Map = make(map[string]string)
+	ipv6Map = make(map[string]string)
+	failMap = make(map[string]string)
+
+	getIP()
+
+	if len(failMap) == len(config.IPAPIs) { // 所有api全部失败
+		log.Warning("all api failed")
+		Alarms2()
+		return
 	}
-	ch := make(chan WebReply)
-	webReplys := make([]WebReply, 0)
-	for _, server := range config.IPAPIs {
-		go func() {
-			req, err := http.NewRequest("GET", server, nil)
-			if err != nil {
-				ch <- WebReply{server, nil, fmt.Sprint(err)}
-				return
-			}
-			var client = &http.Client{
-				Timeout: 5 * time.Second,
-			}
-			resp, err := client.Do(req)
-			if err != nil {
-				ch <- WebReply{server, nil, fmt.Sprint(err)}
-				return
-			}
-			defer resp.Body.Close()
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				ch <- WebReply{server, nil, fmt.Sprint(err)}
-				return
-			}
-			ch <- WebReply{server, body, ""}
-		}()
-	}
-	for len(webReplys) < len(config.IPAPIs) {
-		webReply := <-ch
-		webReplys = append(webReplys, webReply)
-	}
-	for _, webReply := range webReplys {
-		if webReply.err != "" {
-			fail[webReply.server] = webReply.err
-			log.Warning(webReply.err)
-			continue
-		}
-		str := string(webReply.body)
-		if IsIPv4(str) {
-			ipv4[webReply.server] = str
-			log.Info(webReply.server, " reply IP is: ", str)
-		} else if IsIPv6(str) {
-			ipv6[webReply.server] = str
-			log.Info(webReply.server, " reply IP is: ", str)
+
+	equal := true  // 标记所有ip相等
+	empty := false // 标记目标类型ip为空
+	if config.Aliyun.Type == "A" {
+		if len(ipv4Map) == 0 {
+			empty = true
 		} else {
-			type Body struct {
-				Ip string `json:"ip"`
+			keys := GetMapKeys(ipv4Map)
+			for i := 1; i < len(keys); i++ {
+				if ipv4Map[keys[i-1]] != ipv4Map[keys[i]] {
+					equal = false
+					break
+				}
 			}
-			var body Body
-			if err := json.Unmarshal(webReply.body, &body); err != nil {
-				err := fmt.Sprint(webReply.server, " reply data not is json")
-				fail[webReply.server] = err
-				log.Warning(err)
-				continue
-			}
-			if IsIPv4(body.Ip) {
-				ipv4[webReply.server] = body.Ip
-				log.Info(webReply.server, " reply IP is: ", body.Ip)
-			} else if IsIPv6(body.Ip) {
-				ipv6[webReply.server] = body.Ip
-				log.Info(webReply.server, " reply IP is: ", body.Ip)
-			} else {
-				err := fmt.Sprint(webReply.server, " in reply data not found ip")
-				fail[webReply.server] = err
-				log.Warning(err)
+		}
+	} else if config.Aliyun.Type == "AAAA" {
+		if len(ipv6Map) == 0 {
+			empty = true
+		} else {
+			keys := GetMapKeys(ipv6Map)
+			for i := 1; i < len(keys); i++ {
+				if ipv6Map[keys[i-1]] != ipv6Map[keys[i]] {
+					equal = false
+					break
+				}
 			}
 		}
 	}
-}
 
-func describeDomainRecords() {
+	if empty {
+		log.Warning("not found target type ip")
+		Alarms3()
+		return
+	}
+	if !equal {
+		log.Warning("ip not all equal")
+		Alarms0()
+		return
+	}
 
+	value, recodId, err := describeDomainRecords()
+	if err != nil {
+		log.Warning(err)
+		Alarms1(err)
+		return
+	}
+	log.Info("describeDomainRecords ok, value: ", value, " recodId: ", recodId)
+
+	var newIP string
+	if config.Aliyun.Type == "A" {
+		keys := GetMapKeys(ipv4Map)
+		newIP = ipv4Map[keys[0]]
+	} else if config.Aliyun.Type == "AAAA" {
+		keys := GetMapKeys(ipv6Map)
+		newIP = ipv6Map[keys[0]]
+	}
+	equal = newIP == value
+
+	if equal {
+		log.Info("not need update")
+		Notify0()
+		return
+	}
+	newRecordId, err := updateDomainRecord(recodId, newIP)
+	if err != nil {
+		log.Warning(err)
+		Alarms1(err)
+		return
+	}
+	log.Info("updateDomainRecord ok, new recordId: ", newRecordId)
+	Notify1(value)
+	log.Info("update ok")
 }
