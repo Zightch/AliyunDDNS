@@ -45,8 +45,8 @@ var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }
 
-const ALIYUN_API_URL = "https://alidns.aliyuncs.com"
-const ALIYUN_API_VERSION = "2015-01-09"
+const AliyunApiUrl = "https://alidns.aliyuncs.com"
+const AliyunApiVersion = "2015-01-09"
 
 func Configure() {
 	fileData, err := os.ReadFile("data/config.json")

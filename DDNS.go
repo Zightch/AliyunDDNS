@@ -87,7 +87,7 @@ func describeDomainRecords() (string, string, error) {
 	query.Add("DomainName", config.Aliyun.DomainName)                       // 域名
 	query.Add("RRKeyWord", config.Aliyun.RR)                                // 主机记录的关键字
 	query.Add("Format", "JSON")                                             // 返回数据的格式
-	query.Add("Version", ALIYUN_API_VERSION)                                // API版本号
+	query.Add("Version", AliyunApiVersion)                                  // API版本号
 	query.Add("AccessKeyId", config.Aliyun.AccessKeyId)                     // AccessKeyId
 	query.Add("SignatureMethod", "HMAC-SHA1")                               // 签名方式
 	query.Add("Timestamp", time.Now().UTC().Format("2006-01-02T15:04:05Z")) // 请求的时间戳
@@ -97,7 +97,7 @@ func describeDomainRecords() (string, string, error) {
 	signature := AliyunGenSign(query, config.Aliyun.AccessKeySecret)
 	query.Add("Signature", signature)
 
-	requestUrl := fmt.Sprintf("%s/?%s", ALIYUN_API_URL, query.Encode())
+	requestUrl := fmt.Sprintf("%s/?%s", AliyunApiUrl, query.Encode())
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		return "", "", err
@@ -141,7 +141,7 @@ func updateDomainRecord(recordId, newIP string) (string, error) {
 	query.Add("Type", config.Aliyun.Type)                                   // 记录类型
 	query.Add("Value", newIP)                                               // 记录值
 	query.Add("Format", "JSON")                                             // 返回数据的格式
-	query.Add("Version", ALIYUN_API_VERSION)                                // API版本号
+	query.Add("Version", AliyunApiVersion)                                  // API版本号
 	query.Add("AccessKeyId", config.Aliyun.AccessKeyId)                     // AccessKeyId
 	query.Add("SignatureMethod", "HMAC-SHA1")                               // 签名方式
 	query.Add("Timestamp", time.Now().UTC().Format("2006-01-02T15:04:05Z")) // 请求的时间戳
@@ -151,7 +151,7 @@ func updateDomainRecord(recordId, newIP string) (string, error) {
 	signature := AliyunGenSign(query, config.Aliyun.AccessKeySecret)
 	query.Add("Signature", signature)
 
-	requestUrl := fmt.Sprintf("%s/?%s", ALIYUN_API_URL, query.Encode())
+	requestUrl := fmt.Sprintf("%s/?%s", AliyunApiUrl, query.Encode())
 
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
