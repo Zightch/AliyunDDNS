@@ -1,4 +1,5 @@
 
+first = true
 local lastAlarmsTime = 0
 
 function notify0()

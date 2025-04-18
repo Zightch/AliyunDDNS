@@ -45,6 +45,7 @@ Content-Type: text/html; charset=UTF8;
         border-radius: 15px 15px 0 0;
     }
     .footer {
+        padding-top: 20px;
         font-size: 12px;
         color: #999999;
     }
@@ -63,11 +64,22 @@ Content-Type: text/html; charset=UTF8;
         <div class="table table-common">
             ${table}
         </div>
-        <p class="center">查询到${domainName}域名的旧解析记录为${oldIp}</p>
-        <p class="center">已将${newIp}更新到${domainName}的域名解析</p>
+        <p class="center">
+            查询到<br>
+            <b>${domainName}</b><br>
+            域名的旧解析记录为<br>
+            <b>${oldIP}</b>
+        </p>
+        <p class="center">
+            已将<br>
+            <b>${newIP}</b><br>
+            更新到<br>
+            <b>${domainName}</b><br>
+            的域名解析
+        </p>
         <div class="left-right footer">
-            <p>${name}</p>
-            <p class="center-right">此为系统邮件，请勿回复</p>
+            <div>${name}</div>
+            <div class="center-right">此为系统邮件, 请勿回复</div>
         </div>
     </div>
 </body>

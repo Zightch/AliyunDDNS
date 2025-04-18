@@ -18,7 +18,7 @@ func main() {
 
 	Configure()
 	if config.Aliyun.Type != "A" && config.Aliyun.Type != "AAAA" {
-		panic("aliyun.type must be A or AAAA")
+		panic("aliyun.type must is A or AAAA")
 	}
 	c := cron.New()
 	_, err := c.AddFunc(config.Cron, updateDNS)

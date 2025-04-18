@@ -32,7 +32,7 @@ func AliyunGenSign(query url.Values, accessKeySecret string) string {
 	// 在参数前后加上HTTP方法和URL编码的斜杠
 	stringToSign := "GET&%2F&" + url.QueryEscape(paramStringStr)
 
-	// 使用HMAC-SHA1算法计算签名，密钥为AccessKeySecret加上一个&
+	// 使用HMAC-SHA1算法计算签名, 密钥为AccessKeySecret加上一个&
 	key := accessKeySecret + "&"
 	h := hmac.New(sha1.New, []byte(key))
 	h.Write([]byte(stringToSign))
@@ -52,7 +52,7 @@ func IsIPv6(ipStr string) bool {
 }
 
 func GetMapKeys[K comparable, V any](m map[K]V) []K {
-	keys := make([]K, 0, len(m)) // 创建一个切片，长度为 map 的大小
+	keys := make([]K, 0, len(m)) // 创建一个切片, 长度为 map 的大小
 	for key := range m {
 		keys = append(keys, key) // 将每个键添加到切片中
 	}

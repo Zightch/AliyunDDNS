@@ -45,6 +45,7 @@ Content-Type: text/html; charset=UTF8;
         border-radius: 15px 15px 0 0;
     }
     .footer {
+        padding-top: 20px;
         font-size: 12px;
         color: #999999;
     }
@@ -63,7 +64,7 @@ Content-Type: text/html; charset=UTF8;
             或
             <span style="color: #FF0000;">联系运营商</span>
             <br>
-            <strong>本次将不进行DNS解析更新</strong>
+            <strong style="color: #FFD900;">本次将不进行DNS解析更新</strong>
         </div>
         <br/>
         <div class="table-head table-common">
@@ -75,8 +76,8 @@ Content-Type: text/html; charset=UTF8;
         </div>
         <br/>
         <div class="left-right footer">
-            <p>${name}</p>
-            <p class="center-right">此为系统邮件，请勿回复</p>
+            <div>${name}</div>
+            <div class="center-right">此为系统邮件, 请勿回复</div>
         </div>
     </div>
 </body>

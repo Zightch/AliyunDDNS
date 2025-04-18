@@ -57,7 +57,7 @@ func GetIP() {
 			log.Info(webReply.server, " reply IP is: ", str)
 		} else {
 			type Body struct {
-				Ip string `json:"ip"`
+				IP string `json:"ip"`
 			}
 			var body Body
 			if err := json.Unmarshal(webReply.body, &body); err != nil {
@@ -66,12 +66,12 @@ func GetIP() {
 				log.Warning(err)
 				continue
 			}
-			if IsIPv4(body.Ip) {
-				ipv4Map[webReply.server] = body.Ip
-				log.Info(webReply.server, " reply IP is: ", body.Ip)
-			} else if IsIPv6(body.Ip) {
-				ipv6Map[webReply.server] = body.Ip
-				log.Info(webReply.server, " reply IP is: ", body.Ip)
+			if IsIPv4(body.IP) {
+				ipv4Map[webReply.server] = body.IP
+				log.Info(webReply.server, " reply IP is: ", body.IP)
+			} else if IsIPv6(body.IP) {
+				ipv6Map[webReply.server] = body.IP
+				log.Info(webReply.server, " reply IP is: ", body.IP)
 			} else {
 				err := fmt.Sprint(webReply.server, " in reply data not found ip")
 				failMap[webReply.server] = err

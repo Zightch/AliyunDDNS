@@ -34,6 +34,38 @@ func mailStrategy(fn string) (bool, bool) { // 邮件策略
 	return bool(res1), bool(res2)
 }
 
+func sendMail(receivers []string, subject, body string) {
+	errCh := make(chan SMTPError, len(receivers))
+	finishCh := make(chan *SMTP, len(receivers))
+	for _, receiver := range receivers {
+		s := NewSMTP(
+			config.SMTP.Server,
+			config.SMTP.SSL,
+			config.SMTP.User,
+			config.SMTP.Passwd,
+			config.SMTP.Sender,
+			config.Name,
+			3,
+			nil,
+			errCh,
+			finishCh,
+		)
+		s.SendMail(receiver, subject, body)
+	}
+	for i := 0; i < len(receivers); i++ {
+		select {
+		case err := <-errCh:
+			log.Warningf(
+				"receiver: %s, progress: %d, error: %v",
+				err.smtp.receiver,
+				err.progress,
+				err.err,
+			)
+		case <-finishCh:
+		}
+	}
+}
+
 func Alarms0() { // 返回IP不相等
 	admin, user := mailStrategy("alarms0")
 	if admin {
