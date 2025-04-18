@@ -20,6 +20,6 @@ func Notify0() { // 无需更新
 
 }
 
-func Notify1(oldIP string) { // 更新成功
+func Notify1(oldIP, newIP string) { // 更新成功
 
 }

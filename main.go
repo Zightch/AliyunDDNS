@@ -119,6 +119,6 @@ func updateDNS() {
 		return
 	}
 	log.Info("updateDomainRecord ok, new recordId: ", newRecordId)
-	Notify1(value)
+	Notify1(value, newIP)
 	log.Info("update ok")
 }
