@@ -16,7 +16,7 @@ var (
 func main() {
 	log.Info("start configure...")
 
-	Configure()
+	Configure("data/config.json")
 	if config.Aliyun.Type != "A" && config.Aliyun.Type != "AAAA" {
 		panic("aliyun.type must is A or AAAA")
 	}
@@ -26,14 +26,14 @@ func main() {
 		panic(err)
 	}
 
-	log.Info("configure ok")
-
 	lState = lua.NewState()
 	defer lState.Close()
 	err = lState.DoFile("data/mail_strategy.lua")
 	if err != nil {
 		panic(err)
 	}
+
+	log.Info("configure ok")
 
 	updateDNS()
 	first = false

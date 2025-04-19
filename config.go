@@ -51,18 +51,18 @@ var httpClient = &http.Client{
 var aliyunApiUrl = "https://alidns.aliyuncs.com"
 var aliyunApiVersion = "2015-01-09"
 
-func Configure() {
-	fileData, err := os.ReadFile("data/config.json")
+func Configure(configFilePath string) {
+	fileData, err := os.ReadFile(configFilePath)
 	if err != nil {
 		fileData, err := json.MarshalIndent(config, "", "  ")
 		if err != nil {
 			panic(err)
 		}
-		err = os.WriteFile("data/config.json", fileData, 0600)
+		err = os.WriteFile(configFilePath, fileData, 0600)
 		if err != nil {
 			panic(err)
 		}
-		log.Info("Please configure file \"data/config.json\" and then start AliyunDDNS")
+		log.Infof("Please configure file \"%s\" and then start AliyunDDNS", configFilePath)
 		os.Exit(0)
 	}
 	err = json.Unmarshal(fileData, &config)

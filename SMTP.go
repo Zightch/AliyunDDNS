@@ -174,7 +174,10 @@ func (s *SMTP) main() {
 
 		timer.Reset(waitTime) // 重置定时器
 
-		go s.smtpConnReader(dataCh, &err, &buff) // 读取连接数据
+		s.mu.Lock()
+		tmpConn := s.conn
+		s.mu.Unlock()
+		go smtpConnReader(tmpConn, dataCh, &err, &buff) // 读取连接数据
 
 		select { // 等待回复或超时
 		case <-timer.C:
@@ -284,7 +287,7 @@ func (s *SMTP) error(err error) {
 	}
 }
 
-func (s *SMTP) smtpConnReader(dataCh chan []byte, err **error, buff *[]byte) {
+func smtpConnReader(conn net.Conn, dataCh chan []byte, err **error, buff *[]byte) {
 	tmp := make([]byte, 1024) // 缓冲区1024
 	data := make([]byte, 0)
 	var lineSize = 1 // 用于标记\r\n的位置
@@ -303,11 +306,7 @@ func (s *SMTP) smtpConnReader(dataCh chan []byte, err **error, buff *[]byte) {
 			}
 		}
 
-		s.mu.Lock()
-		tmpConn := s.conn // 拷贝指针, 防止外部置nil时panic
-		s.mu.Unlock()
-
-		if tmpConn == nil { // 如果连接已经关闭
+		if conn == nil { // 如果连接已经关闭
 			if err != nil {
 				e := fmt.Errorf("connection is nil")
 				*err = &e
@@ -316,7 +315,7 @@ func (s *SMTP) smtpConnReader(dataCh chan []byte, err **error, buff *[]byte) {
 			return
 		}
 
-		n, e := tmpConn.Read(tmp) // 外部close这里一定会返回error
+		n, e := conn.Read(tmp) // 外部close这里一定会返回error
 		if e != nil {
 			if err != nil {
 				*err = &e
