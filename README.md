@@ -74,4 +74,4 @@ AliyunDDNS
 
 ## 联系作者
 * 邮箱: zightch@163.com
-* QQ: 2166825850
+* QQ: [2166825850](https://qm.qq.com/q/a1XMDEaoWQ)
