@@ -21,6 +21,7 @@ end
 
 function alarmsTime()
     if os.time() - lastAlarmsTime > 3600 then
+        lastAlarmsTime = os.time()
         return true
     end
     return false
@@ -28,7 +29,6 @@ end
 
 function alarms0()
     if alarmsTime() then
-        lastAlarmsTime = os.time()
         return true, false
     end
     return false, false
@@ -36,7 +36,6 @@ end
 
 function alarms1()
     if alarmsTime() then
-        lastAlarmsTime = os.time()
         return true, false
     end
     return false, false
@@ -44,7 +43,6 @@ end
 
 function alarms2()
     if alarmsTime() then
-        lastAlarmsTime = os.time()
         return true, false
     end
     return false, false
@@ -52,7 +50,6 @@ end
 
 function alarms3()
     if alarmsTime() then
-        lastAlarmsTime = os.time()
         return true, false
     end
     return false, false
