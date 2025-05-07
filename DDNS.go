@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -49,6 +50,7 @@ func GetIP() {
 			continue
 		}
 		str := string(webReply.body)
+		str = strings.TrimSpace(str)
 		if IsIPv4(str) {
 			ipv4Map[webReply.server] = str
 			log.Info(webReply.server, " reply IP is: ", str)
