@@ -164,6 +164,7 @@ func Alarms3() { // 没有请求到目标的记录类型
 				return
 			}
 			htmlS = strings.ReplaceAll(htmlS, "${table}", table())
+			htmlS = strings.ReplaceAll(htmlS, "${type}", config.Aliyun.Type)
 			sendMail(config.SMTPAdminReceivers, config.Name+" Alarms", htmlS)
 		}()
 	}
